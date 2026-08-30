@@ -1,2 +1,7 @@
 # DiffPDE
-Official implementation of DiffPDE: Masked Diffusion Language Models as PDE Solver.
+
+Official repository for **DiffPDE: Masked Diffusion Language Models as PDE Solver**.
+
+## Code Release
+
+Code and model checkpoints will be released soon.
