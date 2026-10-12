@@ -1,0 +1,44 @@
+experiment:
+  project: diffpde_eval
+  num_node: 1
+  node_index: 0
+
+assigned_gpu: "0,1,2,3,4,5,6,7"
+max_workers_per_gpu: 1
+
+model: /path/to/DiffPDE-7B
+model_base: dream
+
+dataset:
+  eval_dataset: PDE
+  data_type: pde
+  pde_type: burgers
+  root_dataset_folder: /path/to/PDEBench
+
+execute:
+  good_nrmse_threshold: 0.1
+
+rollout:
+  num_response_per_task: 32
+  temperature: 0.7
+  alg_temp: 0.0
+  top_p: 0.95
+  top_k: 40
+  pad_target_penalty: 1.0
+  remasking_strategy: low_confidence_dynamic
+  target: confidence
+  dynamic_threshold: 0.9
+  steps: 4096
+  block_size: 8
+  max_gen_length: 4096
+  batch_size: 1
+  further_horizon: 128
+  use_cache: true
+  output_unmasking_history: false
+  refine_mask_block_tokens: 256
+  enable_refine: true
+  refine_max_steps: 3
+
+paths:
+  codepde_root: null
+  evaluator_python: null

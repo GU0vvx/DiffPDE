@@ -1,0 +1,10 @@
+# @package pde
+name: darcy
+beta: 1.0
+
+pde_setting_name: beta${pde.beta}
+
+# To be appended to `root_dataset_folder` to get the full path
+dataset_for_eval: 2D_DarcyFlow_beta${pde.beta}_Train_test.hdf5
+
+timeout: 600

@@ -1,0 +1,18 @@
+# Minimal dependencies imported by the five CodePDE numerical evaluators used
+# by DiffPDE (advection, burgers, reacdiff1d, cns1d, and darcy).
+# Versions below are the versions exercised by the Stage 5 smoke test.
+
+numpy==1.26.4
+h5py==3.14.0
+matplotlib==3.10.6
+scipy==1.15.3
+
+# Imported directly by the cns1d evaluator. jax installs a compatible jaxlib;
+# the smoke-tested environment used jaxlib 0.6.2.
+jax==0.6.2
+
+# A generated solver may choose an additional backend. The tested evaluator
+# environment had torch 2.6.0+cu126, but the five evaluator modules and their
+# checked-in solver templates do not import torch directly. Install a
+# platform-appropriate PyTorch build only if a generated solver requires it.
+

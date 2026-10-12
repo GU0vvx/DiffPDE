@@ -1,0 +1,156 @@
+wandb:
+  entity: null
+  resume: auto
+
+assigned_gpu: "0,1,2,3,4,5,6,7"
+
+experiment:
+  project: diffpde_id_grpo
+  function: train
+  start_from_scratch: true
+  total_step: 100
+  current_epoch: 1
+  save_every: 20
+  eval_every: 0
+  deepspeed_file: zero3_8gpu
+  num_node: 1
+  node_index: 0
+  checkpoints_total_limit: 6
+
+model:
+  pretrained_model: /path/to/infilling-sft-checkpoint
+  optimized_name: optimized
+  model_base: dream
+
+dataset:
+  data_type: pde
+  pde_type: burgers
+  multi_pde:
+    enable: true
+    pde_types: [burgers, advection, darcy, cns1d, reacdiff1d]
+    shuffle_before_train: true
+    seed: ${training.seed}
+  optimization_data: pde_rl_data
+  # Directory containing the PDEBench HDF5 files named by configs/pde_type/*.yaml.
+  root_dataset_folder: /path/to/PDEBench
+
+rollout:
+  enable_refine: true
+  num_task_per_step: 2
+  num_response_per_task: 16
+  temperature: 0.7
+  alg_temp: 0.0
+  top_p: 0.95
+  top_k: 40
+  pad_target_penalty: 1.0
+  remasking_strategy: low_confidence_dynamic
+  target: confidence
+  dynamic_threshold: 0.9
+  steps: 4096
+  block_size: 4
+  max_gen_length: 4096
+  batch_size: 1
+  further_horizon: 0
+  use_cache: true
+  output_unmasking_history: false
+  refine_mask_block_tokens: 256
+  refine_max_steps: 2
+
+reward:
+  nrmse_threshold: 0.1
+  refine:
+    attempt_selection:
+      enable: true
+      keep_final_attempt: true
+      keep_improved_attempts: true
+      max_improved_attempts_per_sample: 1
+    good:
+      ok_high_nrmse_reward: 0.5
+    bad:
+      partial_improve_reward: 0.2
+      allowed_new_non_syntax_errors: 0
+      min_shorten_chars: 20
+      min_shorten_ratio: 0.05
+
+execute:
+  max_workers_per_gpu: 16
+
+refine_buffer:
+  max_size: 1024
+
+refine_rollout:
+  num_samples_per_step: 5
+  good_ratio: 0.67
+  num_response_per_sample: 16
+  mask_block_tokens: ${rollout.refine_mask_block_tokens}
+  k_up: 3
+  k_down: 3
+  seed: 42
+  multi_attempt:
+    enable: true
+    num_attempts: 2
+    only_bad_samples: true
+  generation:
+    steps: ${rollout.steps}
+    temperature: 1.0
+    top_p: 0.95
+    top_k: 40
+    target: ${rollout.target}
+    alg_temp: 0.1
+    pad_target_penalty: ${rollout.pad_target_penalty}
+    use_cache: ${rollout.use_cache}
+    further_horizon: ${rollout.further_horizon}
+    remasking_strategy: ${rollout.remasking_strategy}
+    dynamic_threshold: ${rollout.dynamic_threshold}
+
+training:
+  gradient_checkpointing_enable: true
+  gradient_accumulation_steps: 1
+  batch_size_lm: 4
+  mixed_precision: bf16
+  enable_tf32: true
+  seed: 42
+  num_train_epochs: 1
+  max_grad_norm: 1.0
+  method: random_masking
+  lower_p: 0.6
+  upper_p: 0.9
+  post_num: 0
+  mask_times_per_sample: 2
+  max_gen_length: ${rollout.max_gen_length}
+  max_prompt_len: 4096
+  eps: 0.2
+  beta: 0.01
+  use_kl_estimator_k3: true
+
+optimizer:
+  name: adamw
+  params:
+    learning_rate: 5.0e-7
+    scale_lr: false
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0
+    epsilon: 1.0e-8
+
+# Cross-update LR annealing performed by rl_pde.py.
+lr_anneal:
+  enable: true
+  schedule: cosine
+  base_lr: ${optimizer.params.learning_rate}
+  min_lr_scale: 0.5
+  exp_gamma: 0.99
+
+# Each child trainer runs once per RL update; cross-update annealing is above.
+lr_scheduler:
+  scheduler: constant
+  params:
+    learning_rate: ${optimizer.params.learning_rate}
+    warmup_steps: 0
+    min_lr_scale: 1.0
+
+paths:
+  # CODEPDE_ROOT overrides this value when set.
+  codepde_root: null
+  # Set this or DIFFPDE_EVALUATOR_PYTHON for a separate evaluator environment.
+  evaluator_python: null

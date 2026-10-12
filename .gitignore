@@ -1,0 +1,13 @@
+__pycache__/
+logs/
+outputs/
+wandb/
+ckpt/
+checkpoints/
+*.log
+*.hdf5
+*.safetensors
+*.pt
+*.pth
+*.bin
+/data/sft/*.json

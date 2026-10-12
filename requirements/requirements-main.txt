@@ -1,0 +1,30 @@
+# DiffPDE compatibility pins for the main dLLM-RL environment.
+#
+# This is intentionally not a replacement for the requirements of dLLM-RL.
+# First install dLLM-RL at commit
+# bca67b12f700bec4a3fb2dfe50adf04eb62cad5a and follow its pinned README,
+# including its platform-specific FlashAttention installation. Then install this
+# file to reproduce the package versions exercised by the DiffPDE smoke test.
+
+# Imported directly by the DiffPDE overlay.
+torch==2.6.0
+transformers==4.52.4
+accelerate==1.11.0
+omegaconf==2.3.0
+numpy==2.1.2
+tqdm==4.67.1
+termcolor==3.2.0
+wandb==0.23.0
+Pillow==11.3.0
+
+# Used by the public Accelerate/DeepSpeed launcher configuration.
+deepspeed==0.18.2
+
+# Declared by dLLM-RL and imported through its eager model registry.
+triton==3.2.0
+
+# FlashAttention 2.7.4.post1 was present in the tested environment. It is not
+# listed as an installable line here because its wheel must match Python,
+# PyTorch, CUDA, and the C++ ABI. Install the wheel specified by the pinned
+# dLLM-RL README before installing this compatibility file.
+

@@ -1,0 +1,53 @@
+wandb:
+  entity: null
+  resume: auto
+
+experiment:
+  project: diffpde_sft_generation
+  num_node: 1
+  checkpoints_total_limit: 2
+
+model:
+  # Override this path with the downloaded Dream-Coder-7B checkpoint.
+  pretrained_model: /path/to/Dream-Coder-7B
+  optimized_name: optimized
+
+dataset:
+  # The trainer reads ./data/${optimization_data}.json from the dLLM-RL root.
+  optimization_data: SFT-A
+
+training:
+  gradient_checkpointing_enable: true
+  gradient_accumulation_steps: 1
+  batch_size_lm: 8
+  mixed_precision: bf16
+  enable_tf32: true
+  seed: 42
+  num_train_epochs: 2
+  max_grad_norm: 1.0
+
+  method: random_masking
+  lower_p: 0.1
+  upper_p: 0.9
+  block_size: 16
+  mask_times_per_sample: 35
+  post_num: 0
+  max_gen_length: 4096
+  max_prompt_len: 4096
+
+optimizer:
+  name: adamw
+  params:
+    learning_rate: 5.0e-6
+    scale_lr: false
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0
+    epsilon: 1.0e-8
+
+lr_scheduler:
+  scheduler: cosine
+  params:
+    learning_rate: ${optimizer.params.learning_rate}
+    warmup_steps: 300
+    min_lr_scale: 0.05

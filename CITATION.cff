@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use DiffPDE, please cite the paper below."
+type: software
+title: "DiffPDE: Masked Diffusion Language Models as PDE Solver"
+repository-code: "https://github.com/GU0vvx/DiffPDE"
+authors:
+  - family-names: Guo
+    given-names: Wenxuan
+  - family-names: Hong
+    given-names: Yuyang
+  - family-names: Fan
+    given-names: Lubin
+  - family-names: Fu
+    given-names: Zhaojin
+  - family-names: Chen
+    given-names: Lin
+  - family-names: Ding
+    given-names: Kun
+  - family-names: Xiang
+    given-names: Shiming
+preferred-citation:
+  type: conference-paper
+  title: "DiffPDE: Masked Diffusion Language Models as PDE Solver"
+  authors:
+    - family-names: Guo
+      given-names: Wenxuan
+    - family-names: Hong
+      given-names: Yuyang
+    - family-names: Fan
+      given-names: Lubin
+    - family-names: Fu
+      given-names: Zhaojin
+    - family-names: Chen
+      given-names: Lin
+    - family-names: Ding
+      given-names: Kun
+    - family-names: Xiang
+      given-names: Shiming
+  collection-title: "Findings of the Association for Computational Linguistics: EMNLP 2026"
+  year: 2026
+  url: "https://arxiv.org/abs/2608.30532"
